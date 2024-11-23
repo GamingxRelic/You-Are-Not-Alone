@@ -2,23 +2,27 @@ extends CharacterBody2D
 class_name Player
 
 # Abilities
-var dash_unlocked : bool = false
+var dash_unlocked : bool = true
 var attack_unlocked : bool = true
 
 # Animation
 @onready var anim_tree : AnimationTree = $AnimationTree
-@onready var anim_player : AnimationPlayer = $AnimationPlayer
+#@onready var anim_player : AnimationPlayer = $AnimationPlayer
 
 # Attacking
 var can_attack : bool = true
 var attacking : bool = false
 var attack_duration : float = 0.15
+var attack_timer : float = 0.1
+var attack_timer_remaining : float
 @onready var attack_box_collider : CollisionShape2D = $Area2Ds/AttackBox/CollisionShape2D
 @export var attack_box_left_position : Vector2
 @export var attack_box_right_position : Vector2
 
 # Movement
-var movement_speed : float = 200.0
+var walk_speed : float = 100.0
+var run_speed : float = 250.0
+@onready var movement_speed : float = walk_speed # start off by walking
 var x_input : float
 var y_input : float
 
@@ -47,7 +51,7 @@ var jump_was_pressed := false
 var is_jumping := false
 
 # Dashing Variables
-var dash_time : float = 0.15
+var dash_time : float = .15
 @export var dashing : bool = false
 var can_dash : bool = true
 var dash_speed : float = 550.0
@@ -75,6 +79,9 @@ func _process(_delta : float) -> void: # This is only used for inputs
 
 	if Input.is_action_just_released("jump") and velocity.y < 0 and is_jumping:
 		velocity.y *= cut_height
+
+	# Animation Handling
+	handle_animation()
 
 func _physics_process(delta : float) -> void:
 	GameManager.player_pos = global_position
@@ -105,6 +112,7 @@ func _physics_process(delta : float) -> void:
 	if attack_unlocked:
 		handle_attack()
 
+
 	move_and_slide()
 
 func horizontal_movement() -> void:
@@ -132,16 +140,30 @@ func handle_dash() -> void:
 		dash()
 
 func handle_attack() -> void:
-	if Input.is_action_just_pressed("attack") and can_attack and not attacking:
-		attack()
+	if not dashing and not attacking:
+		can_attack = true
+	else:
+		can_attack = false
+
+	if Input.is_action_just_pressed("attack") and not attacking:
+		attack_timer_remaining = attack_timer
+
+	if attack_timer_remaining > 0.0:
+		if can_attack:
+			attack_timer_remaining = 0.0
+			attack()
+		else:
+			attack_timer_remaining -= get_physics_process_delta_time()
+
+	if attacking:
+		attack_box_collider.set_deferred("disabled", false)
+	else:
+		attack_box_collider.set_deferred("disabled", true)
 
 func attack() -> void:
 	# TODO: Play Animation!!
-
 	attacking = true
-	attack_box_collider.set_deferred("disabled", false)
 	await get_tree().create_timer(attack_duration).timeout
-	attack_box_collider.set_deferred("disabled", true)
 	attacking = false
 
 func handle_jump(delta : float) -> void:
@@ -210,6 +232,8 @@ func _on_item_pull_range_body_exited(body: Node2D) -> void:
 		body.stop_following_player()
 
 func dash() -> void:
+	attacking = false
+
 	if is_zero_approx(abs(x_input)):
 		return
 	dashing = true
@@ -217,3 +241,41 @@ func dash() -> void:
 	velocity = Vector2(dash_speed * x_input, 0)
 	await get_tree().create_timer(dash_time).timeout
 	dashing = false
+
+func handle_animation() -> void:
+	var color_states : Array[String] = [
+		"parameters/C State/transition_request",# Cyan
+		"parameters/M State/transition_request",# Magenta
+		"parameters/Y State/transition_request",# Yellow
+		"parameters/K State/transition_request" # Gray
+	]
+
+	for color_state in color_states:
+
+		if attacking:
+			anim_tree[color_state] = "attack"
+
+		elif dashing:
+			anim_tree[color_state] = "dash"
+
+		elif not is_on_floor():
+			var fall_transfer_y_velocity : float = 1.0 # The buffer for when the jump/fall transfer anim should play
+
+			if velocity.y < -fall_transfer_y_velocity:
+				anim_tree[color_state] = "jump"
+
+			elif velocity.y > fall_transfer_y_velocity:
+				anim_tree[color_state] = "fall"
+
+			else:
+				pass # transfer
+
+		elif not is_zero_approx(velocity.x):
+			movement_speed = run_speed
+			if movement_speed >= run_speed:
+				anim_tree[color_state] = "run"
+			else:
+				anim_tree[color_state] = "walk"
+
+		else:
+			anim_tree[color_state] = "idle"

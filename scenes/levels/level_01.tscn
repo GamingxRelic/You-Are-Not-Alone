@@ -1,9 +1,17 @@
-[gd_scene load_steps=9 format=4 uid="uid://bqh46nvqvvqvn"]
+[gd_scene load_steps=20 format=4 uid="uid://bqh46nvqvvqvn"]
 
 [ext_resource type="PackedScene" uid="uid://ciatbfx13u6rt" path="res://scenes/player/player.tscn" id="1_kkgky"]
 [ext_resource type="Texture2D" uid="uid://b7i38llgjnf4k" path="res://assets/tiles/gray_grass_top_part.png" id="2_8em6m"]
+[ext_resource type="Texture2D" uid="uid://l3hpm57abia7" path="res://assets/world/small_tree.png" id="3_33sny"]
 [ext_resource type="Texture2D" uid="uid://bely1twldb7qo" path="res://assets/tiles/gray_grass_cap.png" id="3_frq1f"]
 [ext_resource type="Texture2D" uid="uid://bghptmn63qlsc" path="res://assets/world/gray_tree.png" id="4_jcmy3"]
+[ext_resource type="Texture2D" uid="uid://dye0qleli0xun" path="res://assets/world/bush.png" id="4_qbr1f"]
+[ext_resource type="Texture2D" uid="uid://dkqt6rqp1w1cf" path="res://assets/world/pine_tree.png" id="5_36jg7"]
+[ext_resource type="Texture2D" uid="uid://b50llt3eaqaw" path="res://assets/world/stone.png" id="8_c02my"]
+[ext_resource type="Texture2D" uid="uid://em0nlk58fkvn" path="res://assets/levels/level_01/bed.png" id="9_prcn0"]
+[ext_resource type="Texture2D" uid="uid://y1yma8opqutb" path="res://assets/levels/level_01/dirty_laundry.png" id="10_0de80"]
+[ext_resource type="Texture2D" uid="uid://fh23opf778at" path="res://assets/levels/level_01/dresser.png" id="11_j2t3f"]
+[ext_resource type="Texture2D" uid="uid://cvorwi7aa4iay" path="res://assets/levels/level_01/crookedpainting.png" id="12_icum4"]
 
 [sub_resource type="Environment" id="Environment_bsgj8"]
 background_color = Color(0, 0.183131, 0, 1)
@@ -27,9 +35,19 @@ physics_layer_0/collision_layer = 1
 sources/1 = SubResource("TileSetAtlasSource_sexy6")
 sources/2 = SubResource("TileSetAtlasSource_vf4vv")
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7on15"]
+size = Vector2(895, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xed1d"]
+size = Vector2(1856, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cuw25"]
+size = Vector2(19, 364.5)
+
 [node name="Level01" type="Node2D"]
 
 [node name="Player" parent="." instance=ExtResource("1_kkgky")]
+position = Vector2(1236, 3.75)
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 position = Vector2(0, -26)
@@ -40,19 +58,380 @@ environment = SubResource("Environment_bsgj8")
 [node name="DirectionalLight2D" type="DirectionalLight2D" parent="WorldEnvironment"]
 energy = 0.25
 
-[node name="TileMapLayer" type="TileMapLayer" parent="."]
-tile_map_data = PackedByteArray("AADx/wEAAQAAAAAAAAAOAAEAAQAAAAAAAAANAAEAAQAAAAAAAAAMAAEAAQAAAAAAAAALAAEAAQAAAAAAAAAKAAEAAQAAAAAAAAAJAAEAAQAAAAAAAAAIAAEAAQAAAAAAAAAHAAEAAQAAAAAAAAAGAAEAAQAAAAAAAAAFAAEAAQAAAAAAAAAEAAEAAQAAAAAAAAADAAEAAQAAAAAAAAACAAEAAQAAAAAAAAABAAEAAQAAAAAAAAAAAAEAAQAAAAAAAAD//wEAAQAAAAAAAAD+/wEAAQAAAAAAAAD9/wEAAQAAAAAAAAD8/wEAAQAAAAAAAAD7/wEAAQAAAAAAAAD6/wEAAQAAAAAAAAD5/wEAAQAAAAAAAAD4/wEAAQAAAAAAAAD3/wEAAQAAAAAAAAD2/wEAAQAAAAAAAAD1/wEAAQAAAAAAAAD0/wEAAQAAAAAAAADz/wEAAQAAAAAAAADy/wEAAQAAAAAAAAA=")
-tile_set = SubResource("TileSet_3qiqa")
-
 [node name="Map" type="Node2D" parent="."]
 
-[node name="GrayTree" type="Sprite2D" parent="."]
+[node name="GrayTree" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.423529)
 z_index = -1
-position = Vector2(179, -24)
+position = Vector2(189, -55)
 texture = ExtResource("4_jcmy3")
 
-[node name="GrayTree2" type="Sprite2D" parent="."]
+[node name="GrayTree2" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.772549)
 z_index = -1
-position = Vector2(-107, -24)
+position = Vector2(-108.5, -53.5)
 texture = ExtResource("4_jcmy3")
 flip_h = true
+
+[node name="SmallTree2" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.623529)
+z_index = 1
+position = Vector2(17, -4)
+texture = ExtResource("3_33sny")
+
+[node name="SmallTree3" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.0823529)
+z_index = 1
+position = Vector2(483, -4)
+texture = ExtResource("3_33sny")
+
+[node name="Bush" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.929412)
+position = Vector2(-242, 19)
+texture = ExtResource("4_qbr1f")
+
+[node name="Bush2" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.639216)
+position = Vector2(-47, 19)
+texture = ExtResource("4_qbr1f")
+
+[node name="Bush7" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.305882)
+position = Vector2(262, 19)
+texture = ExtResource("4_qbr1f")
+
+[node name="Bush8" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.113725)
+z_index = 1
+position = Vector2(361, 19)
+texture = ExtResource("4_qbr1f")
+
+[node name="Bush9" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.0627451)
+position = Vector2(676, 19)
+texture = ExtResource("4_qbr1f")
+
+[node name="Bush3" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.768627)
+z_index = 1
+position = Vector2(-154, 25)
+texture = ExtResource("4_qbr1f")
+
+[node name="Bush6" type="Sprite2D" parent="Map"]
+z_index = 1
+position = Vector2(-313, 25)
+texture = ExtResource("4_qbr1f")
+flip_h = true
+
+[node name="Bush4" type="Sprite2D" parent="Map"]
+position = Vector2(-428, 19)
+texture = ExtResource("4_qbr1f")
+
+[node name="PineTree" type="Sprite2D" parent="Map"]
+position = Vector2(-331, -52)
+texture = ExtResource("5_36jg7")
+
+[node name="PineTree2" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.466667)
+position = Vector2(95, -52)
+texture = ExtResource("5_36jg7")
+
+[node name="PineTree3" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.2)
+position = Vector2(296, -52)
+texture = ExtResource("5_36jg7")
+
+[node name="SmallTree" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.886275)
+position = Vector2(-193, -8)
+texture = ExtResource("3_33sny")
+
+[node name="Stone" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.227451)
+z_index = 1
+position = Vector2(406, 30)
+texture = ExtResource("8_c02my")
+
+[node name="Stone8" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.133333)
+z_index = 1
+position = Vector2(591, 30)
+texture = ExtResource("8_c02my")
+
+[node name="Stone9" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.141176)
+z_index = 1
+position = Vector2(746, 30)
+texture = ExtResource("8_c02my")
+
+[node name="Stone2" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.631373)
+z_index = 1
+position = Vector2(238, 29)
+texture = ExtResource("8_c02my")
+
+[node name="Stone3" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.615686)
+z_index = 1
+position = Vector2(52, 35)
+texture = ExtResource("8_c02my")
+
+[node name="Stone4" type="Sprite2D" parent="Map"]
+position = Vector2(-90, 27)
+texture = ExtResource("8_c02my")
+
+[node name="Stone5" type="Sprite2D" parent="Map"]
+z_index = 1
+position = Vector2(-254, 36)
+texture = ExtResource("8_c02my")
+
+[node name="Stone6" type="Sprite2D" parent="Map"]
+position = Vector2(-379, 27)
+texture = ExtResource("8_c02my")
+
+[node name="Stone7" type="Sprite2D" parent="Map"]
+z_index = 1
+position = Vector2(-470, 34)
+texture = ExtResource("8_c02my")
+
+[node name="GrayGrassTopPart" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.792157)
+texture_repeat = 2
+position = Vector2(560, 48)
+texture = ExtResource("2_8em6m")
+
+[node name="GrayGrassTopPart2" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.690196)
+texture_repeat = 2
+position = Vector2(624, 48)
+texture = ExtResource("2_8em6m")
+
+[node name="GrayGrassTopPart3" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.521569)
+texture_repeat = 2
+position = Vector2(688, 48)
+texture = ExtResource("2_8em6m")
+
+[node name="GrayGrassTopPart4" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.384314)
+texture_repeat = 2
+position = Vector2(752, 48)
+texture = ExtResource("2_8em6m")
+
+[node name="GrayGrassTopPart5" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.278431)
+texture_repeat = 2
+position = Vector2(816, 48)
+texture = ExtResource("2_8em6m")
+
+[node name="GrayGrassTopPart6" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.180392)
+texture_repeat = 2
+position = Vector2(880, 48)
+texture = ExtResource("2_8em6m")
+
+[node name="GrayGrassTopPart7" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.0862745)
+texture_repeat = 2
+position = Vector2(944, 48)
+texture = ExtResource("2_8em6m")
+
+[node name="GrayGrassTopPart8" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.0313726)
+texture_repeat = 2
+position = Vector2(1008, 48)
+texture = ExtResource("2_8em6m")
+
+[node name="GrayGrassCap" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.792157)
+position = Vector2(560, 16)
+texture = ExtResource("3_frq1f")
+
+[node name="GrayGrassTopPart16" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.792157)
+texture_repeat = 2
+position = Vector2(592, 48)
+texture = ExtResource("2_8em6m")
+
+[node name="GrayGrassCap16" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.792157)
+position = Vector2(592, 16)
+texture = ExtResource("3_frq1f")
+
+[node name="GrayGrassTopPart17" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.882353)
+texture_repeat = 2
+position = Vector2(496, 48)
+texture = ExtResource("2_8em6m")
+
+[node name="GrayGrassCap17" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.882353)
+position = Vector2(496, 16)
+texture = ExtResource("3_frq1f")
+
+[node name="GrayGrassTopPart18" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.882353)
+texture_repeat = 2
+position = Vector2(528, 48)
+texture = ExtResource("2_8em6m")
+
+[node name="GrayGrassCap18" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.882353)
+position = Vector2(528, 16)
+texture = ExtResource("3_frq1f")
+
+[node name="GrayGrassCap2" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.690196)
+position = Vector2(624, 16)
+texture = ExtResource("3_frq1f")
+
+[node name="GrayGrassTopPart15" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.690196)
+texture_repeat = 2
+position = Vector2(656, 48)
+texture = ExtResource("2_8em6m")
+
+[node name="GrayGrassCap15" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.690196)
+position = Vector2(656, 16)
+texture = ExtResource("3_frq1f")
+
+[node name="GrayGrassCap3" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.521569)
+position = Vector2(688, 16)
+texture = ExtResource("3_frq1f")
+
+[node name="GrayGrassTopPart14" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.521569)
+texture_repeat = 2
+position = Vector2(720, 48)
+texture = ExtResource("2_8em6m")
+
+[node name="GrayGrassCap14" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.521569)
+position = Vector2(720, 16)
+texture = ExtResource("3_frq1f")
+
+[node name="GrayGrassCap4" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.384314)
+position = Vector2(752, 16)
+texture = ExtResource("3_frq1f")
+
+[node name="GrayGrassTopPart13" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.384314)
+texture_repeat = 2
+position = Vector2(784, 48)
+texture = ExtResource("2_8em6m")
+
+[node name="GrayGrassCap13" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.384314)
+position = Vector2(784, 16)
+texture = ExtResource("3_frq1f")
+
+[node name="GrayGrassCap5" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.278431)
+position = Vector2(816, 16)
+texture = ExtResource("3_frq1f")
+
+[node name="GrayGrassTopPart12" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.278431)
+texture_repeat = 2
+position = Vector2(848, 48)
+texture = ExtResource("2_8em6m")
+
+[node name="GrayGrassCap12" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.278431)
+position = Vector2(848, 16)
+texture = ExtResource("3_frq1f")
+
+[node name="GrayGrassCap6" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.180392)
+position = Vector2(880, 16)
+texture = ExtResource("3_frq1f")
+
+[node name="GrayGrassTopPart11" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.180392)
+texture_repeat = 2
+position = Vector2(912, 48)
+texture = ExtResource("2_8em6m")
+
+[node name="GrayGrassCap11" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.180392)
+position = Vector2(912, 16)
+texture = ExtResource("3_frq1f")
+
+[node name="GrayGrassCap7" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.0862745)
+position = Vector2(944, 16)
+texture = ExtResource("3_frq1f")
+
+[node name="GrayGrassTopPart10" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.0862745)
+texture_repeat = 2
+position = Vector2(976, 48)
+texture = ExtResource("2_8em6m")
+
+[node name="GrayGrassCap10" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.0862745)
+position = Vector2(976, 16)
+texture = ExtResource("3_frq1f")
+
+[node name="GrayGrassCap8" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.0313726)
+position = Vector2(1008, 16)
+texture = ExtResource("3_frq1f")
+
+[node name="GrayGrassTopPart9" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.0313726)
+texture_repeat = 2
+position = Vector2(1040, 48)
+texture = ExtResource("2_8em6m")
+
+[node name="GrayGrassCap9" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.0313726)
+position = Vector2(1040, 16)
+texture = ExtResource("3_frq1f")
+
+[node name="Bed" type="Sprite2D" parent="Map"]
+position = Vector2(1330, 15)
+texture = ExtResource("9_prcn0")
+
+[node name="DirtyLaundry" type="Sprite2D" parent="Map"]
+z_index = 1
+position = Vector2(1182, 20)
+texture = ExtResource("10_0de80")
+
+[node name="Dresser" type="Sprite2D" parent="Map"]
+position = Vector2(1220.5, 10.25)
+texture = ExtResource("11_j2t3f")
+
+[node name="Crookedpainting" type="Sprite2D" parent="Map"]
+position = Vector2(1222, -31)
+texture = ExtResource("12_icum4")
+
+[node name="Bush10" type="Sprite2D" parent="Map"]
+modulate = Color(1, 1, 1, 0.0705882)
+z_index = 1
+position = Vector2(556, 22)
+texture = ExtResource("4_qbr1f")
+
+[node name="TileMapLayer" type="TileMapLayer" parent="Map"]
+tile_map_data = PackedByteArray("AADx/wEAAQAAAAAAAAAOAAEAAQAAAAAAAAANAAEAAQAAAAAAAAAMAAEAAQAAAAAAAAALAAEAAQAAAAAAAAAKAAEAAQAAAAAAAAAJAAEAAQAAAAAAAAAIAAEAAQAAAAAAAAAHAAEAAQAAAAAAAAAGAAEAAQAAAAAAAAAFAAEAAQAAAAAAAAAEAAEAAQAAAAAAAAADAAEAAQAAAAAAAAACAAEAAQAAAAAAAAABAAEAAQAAAAAAAAAAAAEAAQAAAAAAAAD//wEAAQAAAAAAAAD+/wEAAQAAAAAAAAD9/wEAAQAAAAAAAAD8/wEAAQAAAAAAAAD7/wEAAQAAAAAAAAD6/wEAAQAAAAAAAAD5/wEAAQAAAAAAAAD4/wEAAQAAAAAAAAD3/wEAAQAAAAAAAAD2/wEAAQAAAAAAAAD1/wEAAQAAAAAAAAD0/wEAAQAAAAAAAADz/wEAAQAAAAAAAADy/wEAAQAAAAAAAADx/wAAAgAAAAAAAADy/wAAAgAAAAAAAADz/wAAAgAAAAAAAAD0/wAAAgAAAAAAAAD1/wAAAgAAAAAAAAD2/wAAAgAAAAAAAAD3/wAAAgAAAAAAAAD4/wAAAgAAAAAAAAD5/wAAAgAAAAAAAAD6/wAAAgAAAAAAAAD7/wAAAgAAAAAAAAD8/wAAAgAAAAAAAAD9/wAAAgAAAAAAAAD+/wAAAgAAAAAAAAD//wAAAgAAAAAAAAAAAAAAAgAAAAAAAAABAAAAAgAAAAAAAAACAAAAAgAAAAAAAAADAAAAAgAAAAAAAAAEAAAAAgAAAAAAAAAFAAAAAgAAAAAAAAAGAAAAAgAAAAAAAAAHAAAAAgAAAAAAAAAIAAAAAgAAAAAAAAAJAAAAAgAAAAAAAAAKAAAAAgAAAAAAAAALAAAAAgAAAAAAAAAMAAAAAgAAAAAAAAANAAAAAgAAAAAAAAAOAAAAAgAAAAAAAAA=")
+tile_set = SubResource("TileSet_3qiqa")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+position = Vector2(798, 41)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(129.5, 6.75)
+shape = SubResource("RectangleShape2D_7on15")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(-350, -325)
+shape = SubResource("RectangleShape2D_xed1d")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(587, -159)
+shape = SubResource("RectangleShape2D_cuw25")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
