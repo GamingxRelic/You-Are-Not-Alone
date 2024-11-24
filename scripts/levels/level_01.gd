@@ -25,3 +25,8 @@ func _on_hospital_bed_area_body_entered(_body: Node2D) -> void:
 
 	anim.play("end_scene")
 	entered_end_scene = true
+
+func load_next_level() -> void:
+	var next_level : Node2D = preload("res://scenes/levels/level_02.tscn").instantiate()
+	get_tree().root.add_child(next_level)
+	queue_free()

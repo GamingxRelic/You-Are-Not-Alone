@@ -1,10 +1,18 @@
 extends CharacterBody2D
 class_name Player
 
+# Health
+var health : int = 5
+var max_health : int = 5
+
+# Respawning
+var recent_checkpoint_position : Vector2 = Vector2.ZERO
+signal respawning
+
 # Abilities
-var dash_unlocked : bool = true
-var attack_unlocked : bool = true
-var wall_grab_unlocked : bool = true
+@export var dash_unlocked : bool = true
+@export var attack_unlocked : bool = true
+@export var wall_grab_unlocked : bool = true
 
 # Animation
 @export_enum("KEY", "MAGENTA", "CYAN", "YELLOW", "FULL") var color : int
@@ -201,10 +209,10 @@ func wall_grab_delay() -> void:
 	await get_tree().create_timer(wall_grab_delay_time).timeout
 	can_wall_grab = true
 
-func stagger():
+func stagger() -> void:
 	velocity = Vector2.ZERO
 	staggered = true
-	await get_tree().create_timer(0.9).timeout
+	await get_tree().create_timer(1.8).timeout
 	staggered = false
 
 func handle_jump(delta : float) -> void:
@@ -291,9 +299,13 @@ func dash() -> void:
 	await get_tree().create_timer(dash_time).timeout
 	dashing = false
 
-func respawn():
-	print("respawn")
+func respawn() -> void:
 	stagger()
+	health = max_health
+	respawning.emit()
+
+func teleport_to_checkpoint() -> void:
+	global_position = recent_checkpoint_position
 
 func handle_animation() -> void:
 	match color:
@@ -344,3 +356,19 @@ func handle_animation() -> void:
 
 		else:
 			anim_tree[color_state] = "idle"
+
+
+func _on_attack_box_body_entered(body: Node2D) -> void:
+	if body.is_in_group("destructable"):
+		can_dash = true
+		body.destroy()
+
+func damage() -> void:
+	modulate = Color.RED
+	var tween : Tween = get_tree().create_tween()
+	tween.tween_property(self, "modulate", Color.WHITE, 0.15)
+
+	health -= 1
+
+	if health <= 0:
+		respawn()

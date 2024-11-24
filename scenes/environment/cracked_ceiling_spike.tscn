@@ -1,17 +1,15 @@
 [gd_scene load_steps=3 format=3 uid="uid://clxvsh8ueyw1t"]
 
-[ext_resource type="Script" path="res://scripts/environment/ceiling_spike.gd" id="1_73bb3"]
+[ext_resource type="Script" path="res://scripts/environment/cracked_ceiling_spike.gd" id="1_xvpe2"]
 [ext_resource type="Texture2D" uid="uid://icgjmd3ifqe1" path="res://assets/levels/level_02/cracked_upright_spike.png" id="2_xfuye"]
 
-[node name="CrackedCeilingSpike" type="Area2D"]
-collision_layer = 0
+[node name="CrackedCeilingSpike" type="StaticBody2D" groups=["destructable"]]
+scale = Vector2(1, 2)
 collision_mask = 2
-script = ExtResource("1_73bb3")
+script = ExtResource("1_xvpe2")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2_xfuye")
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
 polygon = PackedVector2Array(-1, -20, -6.5, -4.8, -13, 20, 16, 20, 8, -14, 3, -5)
-
-[connection signal="body_entered" from="." to="." method="_on_body_entered"]

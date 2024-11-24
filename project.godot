@@ -36,6 +36,15 @@ folder_colors={
 "res://scripts/": "gray"
 }
 
+[global_group]
+
+destructable="For destroyable objects"
+hurtbox=""
+
+[gui]
+
+theme/custom_font="res://assets/fonts/Silkscreen-Regular.ttf"
+
 [input]
 
 move_left={
