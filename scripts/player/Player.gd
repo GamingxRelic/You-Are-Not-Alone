@@ -19,6 +19,13 @@ signal respawning
 @onready var anim_tree : AnimationTree = $AnimationTree
 #@onready var anim_player : AnimationPlayer = $AnimationPlayer
 
+# SFX
+@onready var walk_sfx : AudioStreamPlayer2D = $Audio/WalkSFX
+@onready var land_sfx : AudioStreamPlayer2D = $Audio/LandSFX
+@onready var dash_sfx : AudioStreamPlayer2D = $Audio/DashSFX
+@onready var hit_sfx : AudioStreamPlayer2D = $Audio/HitSFX
+@onready var damage_sfx : AudioStreamPlayer2D = $Audio/DamageSFX
+
 # Attacking
 var can_attack : bool = true
 var attacking : bool = false
@@ -69,6 +76,7 @@ const max_fall_velocity : float = 550.0
 var can_jump := false
 var jump_was_pressed := false
 var is_jumping := false
+var grounded_last_frame : bool = false
 
 # Dashing Variables
 var dash_time : float = .15
@@ -144,6 +152,18 @@ func horizontal_movement() -> void:
 	if dashing or staggered:
 		return
 
+	# Audio
+	if is_on_floor() and not is_zero_approx(velocity.x):
+		if movement_speed == run_speed:
+			walk_sfx.pitch_scale = 2
+		else:
+			walk_sfx.pitch_scale = 1
+
+		if not walk_sfx.playing:
+			walk_sfx.play()
+	else:
+		walk_sfx.stop()
+
 	# Handle the movement/deceleration.
 
 	if x_input < 0:
@@ -185,7 +205,7 @@ func handle_attack() -> void:
 		attack_box_collider.set_deferred("disabled", true)
 
 func attack() -> void:
-	# TODO: Play Animation!!
+	hit_sfx.play()
 	attacking = true
 	await get_tree().create_timer(attack_duration).timeout
 	attacking = false
@@ -220,6 +240,10 @@ func handle_jump(delta : float) -> void:
 		return
 
 	if is_on_floor():
+		if not grounded_last_frame:
+			land_sfx.play()
+		grounded_last_frame = true
+
 		if Input.is_action_just_pressed("move_down"):
 			global_position.y += 1
 
@@ -227,6 +251,8 @@ func handle_jump(delta : float) -> void:
 		can_jump = true
 		if jump_was_pressed:
 			jump()
+	else: # if not grounded
+		grounded_last_frame = false
 
 	# Add the gravity.
 	if not is_on_floor() and not dashing and not wall_grabbing:
@@ -289,13 +315,16 @@ func _on_item_pull_range_body_exited(body: Node2D) -> void:
 		body.stop_following_player()
 
 func dash() -> void:
-	attacking = false
-
 	if is_zero_approx(abs(x_input)):
 		return
+
+	attacking = false
 	dashing = true
 	can_dash = false
 	velocity = Vector2(dash_speed * x_input, 0)
+
+	dash_sfx.play()
+
 	await get_tree().create_timer(dash_time).timeout
 	dashing = false
 
@@ -364,6 +393,8 @@ func _on_attack_box_body_entered(body: Node2D) -> void:
 		body.destroy()
 
 func damage() -> void:
+	damage_sfx.play()
+
 	modulate = Color.RED
 	var tween : Tween = get_tree().create_tween()
 	tween.tween_property(self, "modulate", Color.WHITE, 0.15)

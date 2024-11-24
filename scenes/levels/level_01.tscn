@@ -1,4 +1,4 @@
-[gd_scene load_steps=41 format=4 uid="uid://bqh46nvqvvqvn"]
+[gd_scene load_steps=44 format=4 uid="uid://bqh46nvqvvqvn"]
 
 [ext_resource type="PackedScene" uid="uid://ciatbfx13u6rt" path="res://scenes/player/player.tscn" id="1_kkgky"]
 [ext_resource type="Script" path="res://scripts/levels/level_01.gd" id="1_vp2n7"]
@@ -20,6 +20,9 @@
 [ext_resource type="Texture2D" uid="uid://pwbr6r20ieyk" path="res://assets/tiles/grey_ground_stone_details.png" id="15_668dw"]
 [ext_resource type="Texture2D" uid="uid://cj2e5vv0qlddf" path="res://assets/levels/level_01/heart_monitor_glitched.png" id="15_aq6be"]
 [ext_resource type="Texture2D" uid="uid://cqjt768i15ayb" path="res://assets/levels/level_01/monster_snatch.png" id="19_6r8q1"]
+[ext_resource type="AudioStream" uid="uid://b6ow1ouwpkrfl" path="res://assets/audio/heartrate_beat_sound.mp3" id="20_d3wyj"]
+[ext_resource type="AudioStream" uid="uid://qxn761mhfcxf" path="res://assets/audio/heartrate_flatline.mp3" id="21_hwk3r"]
+[ext_resource type="AudioStream" uid="uid://bh5f83lex7wpl" path="res://assets/audio/glitch_sound.wav" id="22_7ejbh"]
 
 [sub_resource type="Environment" id="Environment_bsgj8"]
 glow_enabled = true
@@ -179,6 +182,30 @@ tracks/8/keys = {
 "update": 0,
 "values": [1.0]
 }
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("HeartMonitor/Flatline:playing")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/10/type = "value"
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/path = NodePath("HeartMonitor/Glitched:playing")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
 
 [sub_resource type="Animation" id="Animation_fprsf"]
 resource_name = "end_scene"
@@ -308,6 +335,30 @@ tracks/9/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 0,
 "values": [1.0]
+}
+tracks/10/type = "value"
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/path = NodePath("HeartMonitor/Flatline:playing")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/keys = {
+"times": PackedFloat32Array(7.9),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/11/type = "value"
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/path = NodePath("HeartMonitor/Glitched:playing")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/keys = {
+"times": PackedFloat32Array(7.9),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_jpnl1"]
@@ -912,6 +963,18 @@ libraries = {
 "": SubResource("AnimationLibrary_pnr7q")
 }
 speed_scale = 0.5
+
+[node name="Beeping" type="AudioStreamPlayer2D" parent="HeartMonitor"]
+stream = ExtResource("20_d3wyj")
+autoplay = true
+max_distance = 512.0
+attenuation = 1.31951
+
+[node name="Flatline" type="AudioStreamPlayer2D" parent="HeartMonitor"]
+stream = ExtResource("21_hwk3r")
+
+[node name="Glitched" type="AudioStreamPlayer2D" parent="HeartMonitor"]
+stream = ExtResource("22_7ejbh")
 
 [node name="MonsterSnatch" type="Sprite2D" parent="."]
 visible = false

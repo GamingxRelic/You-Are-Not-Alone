@@ -5,6 +5,9 @@ extends Node2D
 @onready var anim : AnimationPlayer = $AnimationPlayer
 @onready var player : Player = $Player
 
+@onready var beeping_sfx : AudioStreamPlayer2D = $HeartMonitor/Beeping
+@onready var flatline_sfx : AudioStreamPlayer2D = $HeartMonitor/Flatline
+
 var entered_end_scene : bool = false
 
 func _ready() -> void:
@@ -17,6 +20,8 @@ func _ready() -> void:
 
 func heartrate_glitch() -> void:
 	heartrate_monitor_anim.play("glitched")
+	flatline_sfx.play()
+	beeping_sfx.stop()
 
 
 func _on_hospital_bed_area_body_entered(_body: Node2D) -> void:

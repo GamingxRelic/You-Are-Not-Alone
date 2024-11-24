@@ -9,15 +9,17 @@ var dead : bool = false
 
 @onready var monster_anim : AnimationPlayer = $MonsterAnimation
 @onready var position_anim : AnimationPlayer = $MonsterPosition
+@onready var damage_sfx : AudioStreamPlayer2D = $BossDamageSFX
+@onready var death_sfx : AudioStreamPlayer2D = $BossDeathSFX
 
 func _ready() -> void:
 	monster_anim.play("idle")
 
 func begin_sequence() -> void:
-	print("begin seq")
 	var delay : float = 5.0
 	# actual jump is 1.6 sec in
 
+	if dead: return
 	# Oh my goodness this code is awful... game jam moment.
 	next_anim("start_pos_to_pos_1")
 	await get_tree().create_timer(delay).timeout
@@ -42,7 +44,7 @@ func damage() -> void:
 	if invinicible or i_frames_enabled:
 		return
 
-	print("ow")
+	damage_sfx.play()
 	health -= 1
 
 	if health == 0:
@@ -59,6 +61,7 @@ func damage() -> void:
 func death() -> void:
 	dead = true
 	monster_anim.play("death")
+	death_sfx.play()
 
 func _on_monster_position_animation_finished(_anim_name: StringName) -> void:
 	invinicible = false
