@@ -4,15 +4,17 @@ class_name Player
 # Abilities
 var dash_unlocked : bool = true
 var attack_unlocked : bool = true
+var wall_grab_unlocked : bool = true
 
 # Animation
+@export_enum("KEY", "MAGENTA", "CYAN", "YELLOW", "FULL") var color : int
 @onready var anim_tree : AnimationTree = $AnimationTree
 #@onready var anim_player : AnimationPlayer = $AnimationPlayer
 
 # Attacking
 var can_attack : bool = true
 var attacking : bool = false
-var attack_duration : float = 0.15
+var attack_duration : float = 0.3
 var attack_timer : float = 0.1
 var attack_timer_remaining : float
 @onready var attack_box_collider : CollisionShape2D = $Area2Ds/AttackBox/CollisionShape2D
@@ -20,9 +22,9 @@ var attack_timer_remaining : float
 @export var attack_box_right_position : Vector2
 
 # Movement
-var walk_speed : float = 100.0
+var walk_speed : float = 125.0
 var run_speed : float = 250.0
-@onready var movement_speed : float = walk_speed # start off by walking
+@onready var movement_speed : float = run_speed # start off by walking
 var x_input : float
 var y_input : float
 
@@ -30,6 +32,16 @@ enum facing {
 	LEFT = -1,
 	RIGHT = 1
 }
+
+# Staggered
+var staggered : bool = false
+
+# Wall Grab
+var wall_grabbing : bool = false
+var can_wall_grab : bool = true
+var wall_grab_delay_time : float = 0.25 # Time between wall grabs
+@onready var left_grab_raycast : RayCast2D = $Raycasts/WallGrab/LeftWallGrab
+@onready var right_grab_raycast : RayCast2D = $Raycasts/WallGrab/RightWallGrab
 
 # More predictable jumps
 @export var jump_height : float = 55
@@ -91,6 +103,10 @@ func _physics_process(delta : float) -> void:
 	x_input = Input.get_axis("move_left", "move_right")
 	y_input = Input.get_axis("jump", "move_down")
 
+	# Handle Wall Grab
+	if wall_grab_unlocked:
+		handle_wall_grab()
+
 	# Handle Jump
 	handle_jump(delta)
 
@@ -117,7 +133,7 @@ func _physics_process(delta : float) -> void:
 
 func horizontal_movement() -> void:
 	# If the player is dashing, they should not be able to change directions
-	if dashing:
+	if dashing or staggered:
 		return
 
 	# Handle the movement/deceleration.
@@ -136,11 +152,11 @@ func handle_dash() -> void:
 	if is_on_floor() and not dashing and not can_dash:
 		can_dash = true
 
-	if not dashing and can_dash and Input.is_action_just_pressed("dash"):
+	if not dashing and can_dash and not wall_grabbing and Input.is_action_just_pressed("dash"):
 		dash()
 
 func handle_attack() -> void:
-	if not dashing and not attacking:
+	if not dashing and not wall_grabbing and not attacking:
 		can_attack = true
 	else:
 		can_attack = false
@@ -166,8 +182,33 @@ func attack() -> void:
 	await get_tree().create_timer(attack_duration).timeout
 	attacking = false
 
+func handle_wall_grab() -> void:
+	if not can_wall_grab or dashing or staggered:
+		return
+
+	if left_grab_raycast.is_colliding() and x_input < 0:
+		wall_grabbing = true
+	elif right_grab_raycast.is_colliding() and x_input > 0:
+		wall_grabbing = true
+	else:
+		if wall_grabbing:
+			coyote_time()
+		wall_grabbing = false
+
+
+func wall_grab_delay() -> void:
+	can_wall_grab = false
+	await get_tree().create_timer(wall_grab_delay_time).timeout
+	can_wall_grab = true
+
+func stagger():
+	velocity = Vector2.ZERO
+	staggered = true
+	await get_tree().create_timer(0.9).timeout
+	staggered = false
+
 func handle_jump(delta : float) -> void:
-	if dashing:
+	if dashing or staggered:
 		return
 
 	if is_on_floor():
@@ -180,17 +221,21 @@ func handle_jump(delta : float) -> void:
 			jump()
 
 	# Add the gravity.
-	if not is_on_floor() and not dashing:
+	if not is_on_floor() and not dashing and not wall_grabbing:
 		coyote_time()
 		velocity.y += get_cust_gravity() * delta
 		velocity.y = clampf(velocity.y, -max_fall_velocity, max_fall_velocity)
+
+	if wall_grabbing:
+		velocity.y = 0
+		can_jump = true
 
 	if Input.is_action_just_pressed("jump"):
 		jump_was_pressed = true
 		remember_jump_time()
 		if can_jump:
 			jump()
-#
+
 	if Input.is_action_just_released("jump") and velocity.y < 0 and is_jumping:
 		velocity.y *= cut_height
 
@@ -200,11 +245,15 @@ func get_cust_gravity() -> float:
 	return jump_gravity if velocity.y < 0.0 else fall_gravity
 
 func jump() -> void:
+	if wall_grabbing:
+		wall_grabbing = false
+		wall_grab_delay()
+
 	is_jumping = true
 	velocity.y = jump_velocity
 
 func coyote_time() -> void:
-	await get_tree().create_timer(0.1).timeout
+	await get_tree().create_timer(0.15).timeout
 	can_jump = false
 
 func remember_jump_time() -> void:
@@ -242,7 +291,22 @@ func dash() -> void:
 	await get_tree().create_timer(dash_time).timeout
 	dashing = false
 
+func respawn():
+	print("respawn")
+	stagger()
+
 func handle_animation() -> void:
+	match color:
+		0: # K
+			anim_tree["parameters/Color/transition_request"] = "k"
+		1: # M
+			anim_tree["parameters/Color/transition_request"] = "m"
+		2: # C
+			anim_tree["parameters/Color/transition_request"] = "c"
+		3: # Y
+			anim_tree["parameters/Color/transition_request"] = "y"
+
+
 	var color_states : Array[String] = [
 		"parameters/C State/transition_request",# Cyan
 		"parameters/M State/transition_request",# Magenta
@@ -252,26 +316,27 @@ func handle_animation() -> void:
 
 	for color_state in color_states:
 
-		if attacking:
+		if staggered:
+			anim_tree[color_state] = "stagger"
+
+		elif attacking:
 			anim_tree[color_state] = "attack"
 
 		elif dashing:
 			anim_tree[color_state] = "dash"
 
 		elif not is_on_floor():
-			var fall_transfer_y_velocity : float = 1.0 # The buffer for when the jump/fall transfer anim should play
+			if wall_grabbing:
+				anim_tree[color_state] = "wall_grab"
 
-			if velocity.y < -fall_transfer_y_velocity:
+			elif velocity.y < 0:
 				anim_tree[color_state] = "jump"
 
-			elif velocity.y > fall_transfer_y_velocity:
+			elif velocity.y > 0:
 				anim_tree[color_state] = "fall"
 
-			else:
-				pass # transfer
-
 		elif not is_zero_approx(velocity.x):
-			movement_speed = run_speed
+			#movement_speed = run_speed
 			if movement_speed >= run_speed:
 				anim_tree[color_state] = "run"
 			else:

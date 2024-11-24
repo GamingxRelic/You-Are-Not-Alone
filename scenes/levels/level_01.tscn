@@ -1,6 +1,7 @@
-[gd_scene load_steps=20 format=4 uid="uid://bqh46nvqvvqvn"]
+[gd_scene load_steps=39 format=4 uid="uid://bqh46nvqvvqvn"]
 
 [ext_resource type="PackedScene" uid="uid://ciatbfx13u6rt" path="res://scenes/player/player.tscn" id="1_kkgky"]
+[ext_resource type="Script" path="res://scripts/levels/level_01.gd" id="1_vp2n7"]
 [ext_resource type="Texture2D" uid="uid://b7i38llgjnf4k" path="res://assets/tiles/gray_grass_top_part.png" id="2_8em6m"]
 [ext_resource type="Texture2D" uid="uid://l3hpm57abia7" path="res://assets/world/small_tree.png" id="3_33sny"]
 [ext_resource type="Texture2D" uid="uid://bely1twldb7qo" path="res://assets/tiles/gray_grass_cap.png" id="3_frq1f"]
@@ -12,11 +13,20 @@
 [ext_resource type="Texture2D" uid="uid://y1yma8opqutb" path="res://assets/levels/level_01/dirty_laundry.png" id="10_0de80"]
 [ext_resource type="Texture2D" uid="uid://fh23opf778at" path="res://assets/levels/level_01/dresser.png" id="11_j2t3f"]
 [ext_resource type="Texture2D" uid="uid://cvorwi7aa4iay" path="res://assets/levels/level_01/crookedpainting.png" id="12_icum4"]
+[ext_resource type="Texture2D" uid="uid://bcwvrbourl3tt" path="res://assets/levels/level_01/hospital_bed.png" id="13_a0gel"]
+[ext_resource type="Texture2D" uid="uid://dvy1p5t7dbxg8" path="res://assets/levels/level_01/heart_monitor_normal.png" id="14_d18td"]
+[ext_resource type="Texture2D" uid="uid://dbkyq2v33aup" path="res://assets/tiles/grey_ground.png" id="14_ufjmu"]
+[ext_resource type="Texture2D" uid="uid://pwbr6r20ieyk" path="res://assets/tiles/grey_ground_stone_details.png" id="15_668dw"]
+[ext_resource type="Texture2D" uid="uid://cj2e5vv0qlddf" path="res://assets/levels/level_01/heart_monitor_glitched.png" id="15_aq6be"]
 
 [sub_resource type="Environment" id="Environment_bsgj8"]
-background_color = Color(0, 0.183131, 0, 1)
 glow_enabled = true
 glow_bloom = 0.5
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_k3qvj"]
+texture = ExtResource("14_ufjmu")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_sexy6"]
 texture = ExtResource("2_8em6m")
@@ -29,25 +39,283 @@ texture = ExtResource("3_frq1f")
 texture_region_size = Vector2i(32, 32)
 0:0/0 = 0
 
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_uxrnl"]
+texture = ExtResource("15_668dw")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+
 [sub_resource type="TileSet" id="TileSet_3qiqa"]
 tile_size = Vector2i(32, 32)
 physics_layer_0/collision_layer = 1
 sources/1 = SubResource("TileSetAtlasSource_sexy6")
 sources/2 = SubResource("TileSetAtlasSource_vf4vv")
+sources/0 = SubResource("TileSetAtlasSource_k3qvj")
+sources/3 = SubResource("TileSetAtlasSource_uxrnl")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7on15"]
 size = Vector2(895, 32)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nytiv"]
+size = Vector2(284.5, 32)
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xed1d"]
-size = Vector2(1856, 32)
+size = Vector2(2160, 32)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cuw25"]
 size = Vector2(19, 364.5)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_p4tuj"]
+size = Vector2(19, 364.5)
+
+[sub_resource type="Animation" id="Animation_fprsf"]
+resource_name = "end_scene"
+length = 10.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("HospitalDoorBody/CollisionShape2D:disabled")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Map:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/2/type = "method"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(5.1),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"heartrate_glitch"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_pg5n3"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("HospitalDoorBody/CollisionShape2D:disabled")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Map:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_jpnl1"]
+_data = {
+"RESET": SubResource("Animation_pg5n3"),
+"end_scene": SubResource("Animation_fprsf")
+}
+
+[sub_resource type="Animation" id="Animation_dkp1y"]
+resource_name = "beeping"
+loop_mode = 1
+step = 0.0666
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("14_d18td")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [15]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.0666, 0.1334, 0.2, 0.2666, 0.3334, 0.4, 0.4666, 0.5334, 0.6, 0.6666, 0.7334, 0.8, 0.8666, 0.933333),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("AnimationPlayer:speed_scale")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.5]
+}
+
+[sub_resource type="Animation" id="Animation_n2edy"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("14_d18td")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [15]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("AnimationPlayer:speed_scale")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.5]
+}
+
+[sub_resource type="Animation" id="Animation_pggig"]
+resource_name = "glitched"
+step = 0.0666
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("15_aq6be")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [15]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.0666, 0.1334, 0.2, 0.2666, 0.3334, 0.4, 0.4666, 0.5334, 0.6, 0.6666, 0.7334, 0.8, 0.8666, 0.933333),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("AnimationPlayer:speed_scale")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0.3]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_pnr7q"]
+_data = {
+"RESET": SubResource("Animation_n2edy"),
+"beeping": SubResource("Animation_dkp1y"),
+"glitched": SubResource("Animation_pggig")
+}
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6oowa"]
+size = Vector2(17.8824, 821.918)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_06wtn"]
+size = Vector2(138.75, 61)
+
 [node name="Level01" type="Node2D"]
+script = ExtResource("1_vp2n7")
 
 [node name="Player" parent="." instance=ExtResource("1_kkgky")]
-position = Vector2(1236, 3.75)
+position = Vector2(-510, 1)
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 position = Vector2(0, -26)
@@ -56,7 +324,7 @@ position = Vector2(0, -26)
 environment = SubResource("Environment_bsgj8")
 
 [node name="DirectionalLight2D" type="DirectionalLight2D" parent="WorldEnvironment"]
-energy = 0.25
+energy = 0.05
 
 [node name="Map" type="Node2D" parent="."]
 
@@ -416,22 +684,71 @@ position = Vector2(556, 22)
 texture = ExtResource("4_qbr1f")
 
 [node name="TileMapLayer" type="TileMapLayer" parent="Map"]
-tile_map_data = PackedByteArray("AADx/wEAAQAAAAAAAAAOAAEAAQAAAAAAAAANAAEAAQAAAAAAAAAMAAEAAQAAAAAAAAALAAEAAQAAAAAAAAAKAAEAAQAAAAAAAAAJAAEAAQAAAAAAAAAIAAEAAQAAAAAAAAAHAAEAAQAAAAAAAAAGAAEAAQAAAAAAAAAFAAEAAQAAAAAAAAAEAAEAAQAAAAAAAAADAAEAAQAAAAAAAAACAAEAAQAAAAAAAAABAAEAAQAAAAAAAAAAAAEAAQAAAAAAAAD//wEAAQAAAAAAAAD+/wEAAQAAAAAAAAD9/wEAAQAAAAAAAAD8/wEAAQAAAAAAAAD7/wEAAQAAAAAAAAD6/wEAAQAAAAAAAAD5/wEAAQAAAAAAAAD4/wEAAQAAAAAAAAD3/wEAAQAAAAAAAAD2/wEAAQAAAAAAAAD1/wEAAQAAAAAAAAD0/wEAAQAAAAAAAADz/wEAAQAAAAAAAADy/wEAAQAAAAAAAADx/wAAAgAAAAAAAADy/wAAAgAAAAAAAADz/wAAAgAAAAAAAAD0/wAAAgAAAAAAAAD1/wAAAgAAAAAAAAD2/wAAAgAAAAAAAAD3/wAAAgAAAAAAAAD4/wAAAgAAAAAAAAD5/wAAAgAAAAAAAAD6/wAAAgAAAAAAAAD7/wAAAgAAAAAAAAD8/wAAAgAAAAAAAAD9/wAAAgAAAAAAAAD+/wAAAgAAAAAAAAD//wAAAgAAAAAAAAAAAAAAAgAAAAAAAAABAAAAAgAAAAAAAAACAAAAAgAAAAAAAAADAAAAAgAAAAAAAAAEAAAAAgAAAAAAAAAFAAAAAgAAAAAAAAAGAAAAAgAAAAAAAAAHAAAAAgAAAAAAAAAIAAAAAgAAAAAAAAAJAAAAAgAAAAAAAAAKAAAAAgAAAAAAAAALAAAAAgAAAAAAAAAMAAAAAgAAAAAAAAANAAAAAgAAAAAAAAAOAAAAAgAAAAAAAAA=")
+tile_map_data = PackedByteArray("AADx/wEAAQAAAAAAAAAOAAEAAQAAAAAAAAANAAEAAQAAAAAAAAAMAAEAAQAAAAAAAAALAAEAAQAAAAAAAAAKAAEAAQAAAAAAAAAJAAEAAQAAAAAAAAAIAAEAAQAAAAAAAAAHAAEAAQAAAAAAAAAGAAEAAQAAAAAAAAAFAAEAAQAAAAAAAAAEAAEAAQAAAAAAAAADAAEAAQAAAAAAAAACAAEAAQAAAAAAAAABAAEAAQAAAAAAAAAAAAEAAQAAAAAAAAD//wEAAQAAAAAAAAD+/wEAAQAAAAAAAAD9/wEAAQAAAAAAAAD8/wEAAQAAAAAAAAD7/wEAAQAAAAAAAAD6/wEAAQAAAAAAAAD5/wEAAQAAAAAAAAD4/wEAAQAAAAAAAAD3/wEAAQAAAAAAAAD2/wEAAQAAAAAAAAD1/wEAAQAAAAAAAAD0/wEAAQAAAAAAAADz/wEAAQAAAAAAAADy/wEAAQAAAAAAAADx/wAAAgAAAAAAAADy/wAAAgAAAAAAAADz/wAAAgAAAAAAAAD0/wAAAgAAAAAAAAD1/wAAAgAAAAAAAAD2/wAAAgAAAAAAAAD3/wAAAgAAAAAAAAD4/wAAAgAAAAAAAAD5/wAAAgAAAAAAAAD6/wAAAgAAAAAAAAD7/wAAAgAAAAAAAAD8/wAAAgAAAAAAAAD9/wAAAgAAAAAAAAD+/wAAAgAAAAAAAAD//wAAAgAAAAAAAAAAAAAAAgAAAAAAAAABAAAAAgAAAAAAAAACAAAAAgAAAAAAAAADAAAAAgAAAAAAAAAEAAAAAgAAAAAAAAAFAAAAAgAAAAAAAAAGAAAAAgAAAAAAAAAHAAAAAgAAAAAAAAAIAAAAAgAAAAAAAAAJAAAAAgAAAAAAAAAKAAAAAgAAAAAAAAALAAAAAgAAAAAAAAAMAAAAAgAAAAAAAAANAAAAAgAAAAAAAAAOAAAAAgAAAAAAAADx/wIAAAAAAAAAAADy/wIAAAAAAAAAAADz/wIAAAAAAAAAAAD0/wIAAAAAAAAAAAD1/wIAAAAAAAAAAAD2/wIAAAAAAAAAAAD3/wIAAAAAAAAAAAD4/wIAAAAAAAAAAAD5/wIAAwAAAAAAAAD6/wIAAAAAAAAAAAD7/wIAAAAAAAAAAAAOAAIAAAAAAAAAAAANAAIAAAAAAAAAAAAMAAIAAwAAAAAAAAALAAIAAAAAAAAAAAAKAAIAAAAAAAAAAAAJAAIAAAAAAAAAAAAIAAIAAAAAAAAAAAAHAAIAAAAAAAAAAAAGAAIAAAAAAAAAAAAFAAIAAAAAAAAAAAAEAAIAAAAAAAAAAAADAAIAAAAAAAAAAAACAAIAAAAAAAAAAAABAAIAAAAAAAAAAAAAAAIAAAAAAAAAAAD//wIAAAAAAAAAAAD+/wIAAAAAAAAAAAD9/wIAAAAAAAAAAAD8/wIAAAAAAAAAAADx/wMAAwAAAAAAAAD+/wMAAwAAAAAAAAAIAAMAAwAAAAAAAAA=")
 tile_set = SubResource("TileSet_3qiqa")
 
-[node name="StaticBody2D" type="StaticBody2D" parent="."]
+[node name="Colliders" type="StaticBody2D" parent="."]
+visible = false
 position = Vector2(798, 41)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Colliders"]
 position = Vector2(129.5, 6.75)
 shape = SubResource("RectangleShape2D_7on15")
 
-[node name="CollisionShape2D3" type="CollisionShape2D" parent="StaticBody2D"]
-position = Vector2(-350, -325)
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="Colliders"]
+position = Vector2(-1419.75, 6.75)
+shape = SubResource("RectangleShape2D_nytiv")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="Colliders"]
+position = Vector2(-502, -325)
 shape = SubResource("RectangleShape2D_xed1d")
 
-[node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D"]
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Colliders"]
 position = Vector2(587, -159)
 shape = SubResource("RectangleShape2D_cuw25")
 
+[node name="CollisionShape2D5" type="CollisionShape2D" parent="Colliders"]
+position = Vector2(-1572, -159)
+shape = SubResource("RectangleShape2D_p4tuj")
+
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_jpnl1")
+}
+
+[node name="HospitalBed" type="Sprite2D" parent="."]
+position = Vector2(-707, 3)
+texture = ExtResource("13_a0gel")
+
+[node name="HeartMonitor" type="Sprite2D" parent="."]
+position = Vector2(-637, -9)
+texture = ExtResource("14_d18td")
+hframes = 15
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="HeartMonitor"]
+libraries = {
+"": SubResource("AnimationLibrary_pnr7q")
+}
+speed_scale = 0.5
+
+[node name="HospitalDoorBody" type="StaticBody2D" parent="."]
+position = Vector2(-490, -4.5)
+scale = Vector2(1.0625, 0.365)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HospitalDoorBody"]
+position = Vector2(-69.6471, -310.959)
+scale = Vector2(1, 1)
+shape = SubResource("RectangleShape2D_6oowa")
+disabled = true
+
+[node name="HospitalBedArea" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HospitalBedArea"]
+visible = false
+position = Vector2(-659.375, -3)
+shape = SubResource("RectangleShape2D_06wtn")
+
+[connection signal="body_entered" from="HospitalBedArea" to="." method="_on_hospital_bed_area_body_entered"]

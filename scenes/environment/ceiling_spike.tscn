@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://didwwrp1veu3p"]
+
+[ext_resource type="Script" path="res://scripts/environment/ceiling_spike.gd" id="1_ffc4w"]
+[ext_resource type="Texture2D" uid="uid://djv6iirf6kpvq" path="res://assets/levels/level_02/falling_spike.png" id="1_xisju"]
+
+[node name="CeilingSpike" type="Area2D"]
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+script = ExtResource("1_ffc4w")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_xisju")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(-18, -28, -7.5, 13, -2, 28, 3, 14, 6, 20, 15.7, -15.5, 20, -28)
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
